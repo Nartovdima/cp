@@ -3,6 +3,7 @@
 ## Graphs Theory
 
 ## Data Structures
+
 ### Segment tree
 ### Disjoint set union
 ### sqrt decomposition
