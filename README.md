@@ -1,1 +1,3 @@
 # Competitive Programming
+
+## Segment tree
