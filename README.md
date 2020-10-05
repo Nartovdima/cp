@@ -1,4 +1,18 @@
 # Competitive Programming
 
-## Segment tree
+## Graphs Theory
+
+## Data Structures
+
+## Maths Algos
+
+## Geometry
+
+## Stringology
+
+## Sequences algos
+
+## Game Theory
+
+## Dynamic Programming
 
