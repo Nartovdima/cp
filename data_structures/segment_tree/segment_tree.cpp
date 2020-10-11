@@ -134,8 +134,6 @@ void update(int v, int l, int r, int L, int R, int x)
 
 signed main()
 {
-	freopen("sum.in", "r", stdin);
-	freopen("sum.out", "w", stdout);
     #ifdef _LOCAL
     	clock_t Tsart = clock();
 		freopen("input.txt", "r", stdin);
