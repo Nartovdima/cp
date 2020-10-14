@@ -1,5 +1,5 @@
 # Competitive Programming
-> :warning: **(x) - 5a0a command shortcuts**
+>**(x) - 5a0a command shortcuts**
 
 Repository with collection of competitive programming algorithms
 
