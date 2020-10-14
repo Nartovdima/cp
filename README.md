@@ -1,17 +1,20 @@
 # Competitive Programming
 
+**(x) - 5a0a bot !algo command shortcuts**
+
 ## Graphs Theory
 
 ## Data Structures
 
-### Segment tree
-### Disjoint set union
-### sqrt decomposition
-### Treap
-### Fenwick tree
-### Stack
-### Queue
-### Deque
+### Segment tree (st)
+### Disjoint set union (dsu)
+### sqrt decomposition (sqrt)
+### Treap (treap)
+### Fenwick tree (ft)
+### Stack (st)
+### Queue (qe)
+### Deque (dq)
+
 ## Maths Algos
 
 ## Geometry
