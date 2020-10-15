@@ -20,6 +20,8 @@ Repository with collection of competitive programming algorithms
 
 ## Geometry
 
+### universal geometry functions (ugeo)
+
 ## Stringology
 
 ## Sequences algos
