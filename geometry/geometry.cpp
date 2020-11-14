@@ -88,13 +88,8 @@ ld len(point a, point b) { //расстояние между 2-мя точкам
     return v.length();
 }
 
-int pt_in_cr(point a, point o, int r) { //принадлежность точки окружности
-	if ((o.x - a.x) * (o.y - a.y) == r * r)
-		return 0;
-	if ((o.x - a.x) * (o.y - a.y) < r * r)
-		return -1;
-	if ((o.x - a.x) * (o.y - a.y) > r * r)
-		return 1;
+bool pt_in_cr(point a, point o, int r) { //принадлежность точки окружности
+	return (sqr(a.x - o.x) + sqr(a.y - o.y) == r * r)
 }
 
 bool pt_in_ob(int n, point *p, point a) //принадлежность точки многоугольнику
