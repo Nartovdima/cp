@@ -5,6 +5,7 @@ Repository with collection of competitive programming algorithms
 
 ## Graphs Theory
 
+### Graph traversal
 ### Shortest path
 
 ## Data Structures
