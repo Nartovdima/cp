@@ -5,6 +5,8 @@ Repository with collection of competitive programming algorithms
 
 ## Graphs Theory
 
+### Shortest path
+
 ## Data Structures
 
 ### Segment tree (st)
