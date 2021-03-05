@@ -19,7 +19,7 @@ Repository with collection of competitive programming algorithms
 - Maths Algos
 
 - Geometry
-- 
+
 - Stringology
   - Hash
 - Sequences algos
