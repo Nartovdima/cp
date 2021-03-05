@@ -1,37 +1,30 @@
 # Competitive Programming
->**(x) - 5a0a command shortcuts**
 
 Repository with collection of competitive programming algorithms
 
-## Graphs Theory
+- Graphs Theory
+  - Graph traversal
+  - Shortest path
 
-### Graph traversal
-#### Dijkstra's algorithm
+- Data Structures
+  - Segment tree
+  - Disjoint set union
+  - sqrt decomposition
+  - Treap
+  - Fenwick tree
+  - Stack
+  - Queue
+  - Deque
 
-### Shortest path
+- Maths Algos
 
-## Data Structures
+- Geometry
+- 
+- Stringology
+  - Hash
+- Sequences algos
 
-### Segment tree (st)
-### Disjoint set union (dsu)
-### sqrt decomposition (sqrt)
-### Treap (treap)
-### Fenwick tree (ft)
-### Stack (st)
-### Queue (qe)
-### Deque (dq)
+- Game Theory
 
-## Maths Algos
-
-## Geometry
-
-### universal geometry functions (ugeo)
-
-## Stringology
-### Hash
-## Sequences algos
-
-## Game Theory
-
-## Dynamic Programming
+- Dynamic Programming
 
