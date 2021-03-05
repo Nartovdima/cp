@@ -1,6 +1,6 @@
 # Competitive Programming
 
-Repository with collection of competitive programming algorithms
+##### Repository with collection of competitive programming algorithms
 
 - Graphs Theory
   - Graph traversal
