@@ -1,12 +1,12 @@
 # Competitive Programming
 
-Repository with collection of competitive programming algorithms
+##### Repository with collection of competitive programming algorithms
 
-- Graphs Theory
+- **Graphs Theory**
   - Graph traversal
   - Shortest path
 
-- Data Structures
+- **Data Structures**
   - Segment tree
   - Disjoint set union
   - sqrt decomposition
@@ -16,15 +16,16 @@ Repository with collection of competitive programming algorithms
   - Queue
   - Deque
 
-- Maths Algos
+- **Maths Algos**
 
-- Geometry
+- **Geometry**
 
-- Stringology
+- **Stringology**
   - Hash
-- Sequences algos
+  
+- **Sequences algos**
 
-- Game Theory
+- **Game Theory**
 
-- Dynamic Programming
+- **Dynamic Programming**
 
