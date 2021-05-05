@@ -117,7 +117,6 @@ signed main()
  	iniz(MAXN);
  	hash1(s);
  	
-
  	
 	#ifdef _LOCAL
 		cerr << "Runtime: " << (ld)(clock() - Tsart) / CLOCKS_PER_SEC << '\n';
