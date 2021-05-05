@@ -105,7 +105,10 @@ signed main()
  	
  	dijkstra(0);
 
- 	cout << d[n - 1] << '\n';
+ 	if (d[n - 1] == INF)
+	    cout << -1 << '\n';
+	else
+	    cout << d[n - 1] << '\n';
  	
 	#ifdef _LOCAL
 		cerr << "Runtime: " << (ld)(clock() - Tsart) / CLOCKS_PER_SEC << '\n';
