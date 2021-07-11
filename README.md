@@ -3,6 +3,7 @@
 ##### Repository with collection of competitive programming algorithms
 
 - Сортировки 
+  - Сортировка пузырьком
 
 - Поиск
   - Бинарный поиск
