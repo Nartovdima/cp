@@ -105,7 +105,7 @@ signed main() {
     }
 
     int id = -1;
-    for (int i = k - 1; i >= -1; i--)
+    for (int i = k - 2; i >= -1; i--)
         if (c[i] + 1 < c[i + 1])
             id = i;
     if (id == -1) {
