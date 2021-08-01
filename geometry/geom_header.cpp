@@ -193,9 +193,7 @@ signed main() {
     #endif
     fast();
 
-    int a, b;
-    cin >> a >> b;
-    cout << a + b << '\n';
+    
     
     #ifdef _LOCAL
         cerr << "Runtime: " << (ld)(clock() - Tsart) / CLOCKS_PER_SEC << '\n';
