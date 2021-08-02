@@ -80,6 +80,8 @@ inline void operator delete (void *) noexcept { } */
 template <typename T> struct point {
     T x, y;
 
+    point () : x(0), y(0) {}; // стандартный конструктор
+
     point (T x1, T y1) : x(x1), y(y1) {}; // создание точки (x, y)
 
     friend istream& operator >> (istream& is, point& p) { // перегрузка ввода
@@ -88,13 +90,15 @@ template <typename T> struct point {
     }
 
     friend ostream& operator << (ostream& os, point p) { // перегрузка вывода
-        os << p.x << ' ' << p.y << '\n';
+        os << p.x << ' ' << p.y;
         return os;
     }
 };
 
 template <typename T> struct Vector {
     T x, y;
+
+    Vector () : x(0), y(0) {}; // стандартный конструктор
 
     Vector (T x1, T y1) : x(x1), y(y1) {}; // создание вектора (x, y)
 
@@ -109,7 +113,7 @@ template <typename T> struct Vector {
     }
 
     friend ostream& operator << (ostream& os, Vector v) { // перегрузка вывода
-        os << v.x << ' ' << v.y << '\n';
+        os << v.x << ' ' << v.y;
         return os;
     }
 
@@ -158,6 +162,8 @@ template <typename T> struct Vector {
 template <typename T> struct line {
     T a, b, c;
 
+    line () : a(0), b(0), c(0) {}; // стандартный конструктор
+
     line (T a1, T b1, T c1) : a(a1), b(b1), c(c1) {}; // создание прямой a * x + b * y + c = 0
 
     line (point <T> m1, point <T> m2) { // создание прямой по двум точкам
@@ -167,14 +173,14 @@ template <typename T> struct line {
     }
 
     Vector <T> norm () { // вектор-нормаль 
-        return Vector(a, b);
+        return Vector <T> (a, b);
     }
 
     Vector <T> direct () { // направляющий вектор
-        return Vector(-b, a);
+        return Vector <T> (-b, a);
     }
 
-    T dist (point <T>   p) { // расстояние от точки до прямой
+    T dist (point <T> p) { // расстояние от точки до прямой
         return abs(a * p.x + b * p.y + c) / sqrt(a * a + b * b);
     }
 };
@@ -194,7 +200,7 @@ signed main() {
     fast();
 
     
-    
+
     #ifdef _LOCAL
         cerr << "Runtime: " << (ld)(clock() - Tsart) / CLOCKS_PER_SEC << '\n';
     #endif      
