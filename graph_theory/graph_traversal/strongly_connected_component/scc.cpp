@@ -123,7 +123,7 @@ signed main() {
         int v = topsort[i];
         if (!used[v]){
             cmp.clear();
-            dfs(i, gt, cmp);
+            dfs(v, gt, cmp);
             cout << cmp << '\n';
         }
     }
