@@ -121,7 +121,7 @@ signed main() {
     used.assign(n, 0);
     for (int i = 0; i < n; i++) {
         int v = topsort[i];
-        if (!used[i]){
+        if (!used[v]){
             cmp.clear();
             dfs(i, gt, cmp);
             cout << cmp << '\n';
