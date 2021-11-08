@@ -76,7 +76,7 @@ void dijkstra(int v){
 			if (d[to] > d[u] + dist){
 				q.erase({d[to], to});
 				d[to] = d[u] + dist;
-				p[to] = v;
+				p[to] = u;
 				q.insert({d[to], to});
 			}
 		}
