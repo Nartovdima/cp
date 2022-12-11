@@ -47,7 +47,7 @@ typedef vector <vector <int> > graph;
 const int INF = 1e9;
 const ld EPS = 1e-8;
 const ld PI = atan2(0.0, -1.0);
-const int M = 1e9;
+const int M = 1e9 + 7;
 const int MAXN = 2 * 1e5;
 
 #ifdef _LOCAL
@@ -81,29 +81,15 @@ inline void operator delete (void *) noexcept { } */
     Solutions starts here!!!
    -------------------------- */
 
-vector <int> parent, rang;
-
-void make_set (int v) {
-    parent[v] = v;
-    rang[v] = 0;
-}
-
-int find_set (int v) {
-    if (parent[v] == v)
-        return v;
-    return parent[v] = find_set(parent[v]);
-}
-
-void union_sets (int v, int u) {
-    v = find_set(v);
-    u = find_set(u);
-    if (v != u) {
-        if (rang[v] > rang[u])
-            swap(v, u);
-        parent[v] = u;
-        if (rang[v] == rang[u])
-            rang[u]++;
+int binpow (int a, int b, int mod) {
+    int res = 1;
+    while (b) {
+        if (b & 1)
+            res = res * a % mod;
+        a = a * a % mod;
+        b >>= 1;
     }
+    return res;
 }
 
 signed main() {
@@ -114,32 +100,10 @@ signed main() {
     #endif
     fast();
 
-    int n, m;
-    cin >> n >> m;
-    parent.resize(n + 1, 0);
-    rang.resize(n + 1, -1);
-    while (m--) {
-        string s;
-        int a, b;
-        cin >> s;
-        cin >> a >> b;
-        if (s == "get") {
-            if (parent[a] == 0)
-                make_set(a);
-            if (parent[b] == 0)
-                make_set(b);
-            cout << (find_set(a) == find_set(b) ? "YES" : "NO") << '\n';
-        }
-        else {
-            if (parent[a] == 0)
-                make_set(a);
-            if (parent[b] == 0)
-                make_set(b);
-            union_sets(a, b);
-        }
+    int a, n, mod;
+    cin >> a >> n >> mod;
+    cout << binpow(a, n, mod) << '\n';
 
-    }
-    
     #ifdef _LOCAL
         cerr << "Runtime: " << (ld)(clock() - Tsart) / CLOCKS_PER_SEC << '\n';
     #endif      

@@ -81,30 +81,13 @@ inline void operator delete (void *) noexcept { } */
     Solutions starts here!!!
    -------------------------- */
 
-vector <int> parent, rang;
+struct edge {
+    ll v, u, w;
+};
 
-void make_set (int v) {
-    parent[v] = v;
-    rang[v] = 0;
-}
-
-int find_set (int v) {
-    if (parent[v] == v)
-        return v;
-    return parent[v] = find_set(parent[v]);
-}
-
-void union_sets (int v, int u) {
-    v = find_set(v);
-    u = find_set(u);
-    if (v != u) {
-        if (rang[v] > rang[u])
-            swap(v, u);
-        parent[v] = u;
-        if (rang[v] == rang[u])
-            rang[u]++;
-    }
-}
+vector <edge> e;
+vector <ll> d, parent, ans;
+vector <bool> used;
 
 signed main() {
     #ifdef _LOCAL
@@ -114,32 +97,64 @@ signed main() {
     #endif
     fast();
 
-    int n, m;
-    cin >> n >> m;
-    parent.resize(n + 1, 0);
-    rang.resize(n + 1, -1);
-    while (m--) {
-        string s;
-        int a, b;
-        cin >> s;
-        cin >> a >> b;
-        if (s == "get") {
-            if (parent[a] == 0)
-                make_set(a);
-            if (parent[b] == 0)
-                make_set(b);
-            cout << (find_set(a) == find_set(b) ? "YES" : "NO") << '\n';
+    int n;
+    cin >> n;
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < n; j++) {
+            int x;
+            cin >> x;
+            if (x == 100000)
+                continue;
+            edge tmp;
+            tmp.v = i; tmp.u = j; tmp.w = x;
+            e.pb(tmp);
         }
-        else {
-            if (parent[a] == 0)
-                make_set(a);
-            if (parent[b] == 0)
-                make_set(b);
-            union_sets(a, b);
+    /*for (auto i : e)
+        cout << i.v << ' ' << i.u << ' ' << i.w << '\n';*/
+    bool flag;
+    d.resize(n, INF);
+    parent.resize(n, INF);
+    for (int t = 0; t < n; t++) {
+        if (d[t] != INF) continue;
+        d[t] = 0;
+        parent[t] = t;
+        int relax;
+        for (int i = 0; i < n; i++) {
+            flag = 0;
+            for (auto i : e) {
+                if (d[i.v] == INF)
+                    continue;
+                if (d[i.u] > d[i.v] + i.w) {
+                    d[i.u] = d[i.v] + i.w;
+                    parent[i.u] = i.v;
+                    flag = 1;
+                    relax = i.u;
+                }
+            }
         }
-
+        if (flag) {
+            cout << "YES" << '\n';
+            used.resize(n, 0);
+            int v = relax;
+            while (!used[v]) {
+                used[v] = 1;
+                v = parent[v];
+            }
+            used.clear();
+            used.resize(n, 0);
+            while (used[v] == 0) {
+                used[v] = 1;
+                ans.pb(v + 1);
+                v = parent[v];
+            }
+            ans.pb(v + 1);
+            reverse(all(ans));
+            cout << ans.size() << '\n';
+            cout << ans << '\n';
+            return 0;
+        }
     }
-    
+    cout << "NO" << '\n';
     #ifdef _LOCAL
         cerr << "Runtime: " << (ld)(clock() - Tsart) / CLOCKS_PER_SEC << '\n';
     #endif      

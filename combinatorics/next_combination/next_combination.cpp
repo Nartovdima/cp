@@ -81,30 +81,7 @@ inline void operator delete (void *) noexcept { } */
     Solutions starts here!!!
    -------------------------- */
 
-vector <int> parent, rang;
 
-void make_set (int v) {
-    parent[v] = v;
-    rang[v] = 0;
-}
-
-int find_set (int v) {
-    if (parent[v] == v)
-        return v;
-    return parent[v] = find_set(parent[v]);
-}
-
-void union_sets (int v, int u) {
-    v = find_set(v);
-    u = find_set(u);
-    if (v != u) {
-        if (rang[v] > rang[u])
-            swap(v, u);
-        parent[v] = u;
-        if (rang[v] == rang[u])
-            rang[u]++;
-    }
-}
 
 signed main() {
     #ifdef _LOCAL
@@ -114,32 +91,34 @@ signed main() {
     #endif
     fast();
 
-    int n, m;
-    cin >> n >> m;
-    parent.resize(n + 1, 0);
-    rang.resize(n + 1, -1);
-    while (m--) {
-        string s;
-        int a, b;
-        cin >> s;
-        cin >> a >> b;
-        if (s == "get") {
-            if (parent[a] == 0)
-                make_set(a);
-            if (parent[b] == 0)
-                make_set(b);
-            cout << (find_set(a) == find_set(b) ? "YES" : "NO") << '\n';
-        }
-        else {
-            if (parent[a] == 0)
-                make_set(a);
-            if (parent[b] == 0)
-                make_set(b);
-            union_sets(a, b);
-        }
+    int n, k;
+    cin >> n >> k;
+    vector <int> c;
+    c.resize(k);
+    cin >> c;
+    sort(all(c));
 
+    if (c[k - 1] < n) {
+        c[k - 1]++;
+        cout << c << '\n';
+        return 0;
     }
-    
+
+    int id = -1;
+    for (int i = k - 2; i >= -1; i--)
+        if (c[i] + 1 < c[i + 1])
+            id = i;
+    if (id == -1) {
+        for (int i = 0; i < k; i++)
+            cout << i + 1 << ' ';
+        return 0;
+    }
+    c[id]++;
+    for (int j = id + 1; j < k; j++)
+        c[j] = c[j - 1] + 1;
+
+    cout << c << '\n';
+
     #ifdef _LOCAL
         cerr << "Runtime: " << (ld)(clock() - Tsart) / CLOCKS_PER_SEC << '\n';
     #endif      

@@ -48,7 +48,7 @@ const int INF = 1e9;
 const ld EPS = 1e-8;
 const ld PI = atan2(0.0, -1.0);
 const int M = 1e9;
-const int MAXN = 2 * 1e5;
+const int MAXN = 5e5;
 
 #ifdef _LOCAL
     mt19937 rnd(223);
@@ -81,29 +81,40 @@ inline void operator delete (void *) noexcept { } */
     Solutions starts here!!!
    -------------------------- */
 
-vector <int> parent, rang;
+int tin[MAXN], tout[MAXN];
+int up[MAXN][20];
+vector <char> used;
+graph g;
+int t = 0;
+int l = 1;
 
-void make_set (int v) {
-    parent[v] = v;
-    rang[v] = 0;
-}
-
-int find_set (int v) {
-    if (parent[v] == v)
-        return v;
-    return parent[v] = find_set(parent[v]);
-}
-
-void union_sets (int v, int u) {
-    v = find_set(v);
-    u = find_set(u);
-    if (v != u) {
-        if (rang[v] > rang[u])
-            swap(v, u);
-        parent[v] = u;
-        if (rang[v] == rang[u])
-            rang[u]++;
+void dfs(int v, int p = 0) {
+    tin[v] = ++t;
+    used[v] = 1;
+    up[v][0] = p;
+    for (int i = 1; i <= l; i++)
+        up[v][i] = up[up[v][i - 1]][i - 1];
+    for (auto u : g[v]) {
+        if (!used[u])
+            dfs(u, v);
     }
+    tout[v] = ++t;
+}
+
+bool is_ancestor (int v, int u) {
+    return tin[v] <= tin[u] && tout[v] >= tout[u];
+}
+    
+
+int lca (int a, int b) {
+    if (is_ancestor(a, b))
+        return a;
+    if (is_ancestor(b, a))
+        return b;
+    for (int i = l; i >= 0; --i)
+        if (!is_ancestor(up[a][i], b))
+            a = up[a][i];
+    return up[a][0];
 }
 
 signed main() {
@@ -114,32 +125,35 @@ signed main() {
     #endif
     fast();
 
-    int n, m;
-    cin >> n >> m;
-    parent.resize(n + 1, 0);
-    rang.resize(n + 1, -1);
-    while (m--) {
+    int n;
+    cin >> n;
+    vector <ii> requests;
+    g.resize(n);
+    int mx = 0;
+    while (n--) {
         string s;
         int a, b;
-        cin >> s;
-        cin >> a >> b;
-        if (s == "get") {
-            if (parent[a] == 0)
-                make_set(a);
-            if (parent[b] == 0)
-                make_set(b);
-            cout << (find_set(a) == find_set(b) ? "YES" : "NO") << '\n';
+        cin >> s >> a >> b;
+        a--; b--;
+        if (s == "ADD") {
+            g[a].pb(b);
+            mx = max(mx, b);
         }
         else {
-            if (parent[a] == 0)
-                make_set(a);
-            if (parent[b] == 0)
-                make_set(b);
-            union_sets(a, b);
+            requests.pb({a, b});
         }
-
     }
     
+    g.resize(mx);
+    used.resize(mx, 0);
+    while ((1 << l) <= mx) l++;
+
+    dfs(0);
+
+    for (int i = 0; i < requests.size(); ++i) {
+        cout << lca(requests[i].ff, requests[i].ss) + 1 << '\n';
+    }
+
     #ifdef _LOCAL
         cerr << "Runtime: " << (ld)(clock() - Tsart) / CLOCKS_PER_SEC << '\n';
     #endif      

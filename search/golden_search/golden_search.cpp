@@ -45,7 +45,7 @@ typedef vector <vector <int> > graph;
 #define all(x) (x).begin(), (x).end()
  
 const int INF = 1e9;
-const ld EPS = 1e-8;
+const ld EPS = 1e-9;
 const ld PI = atan2(0.0, -1.0);
 const int M = 1e9;
 const int MAXN = 2 * 1e5;
@@ -58,19 +58,19 @@ const int MAXN = 2 * 1e5;
     mt19937_64 rndll(chrono::high_resolution_clock::now().time_since_epoch().count());
 #endif
 
-template<typename T>             istream& operator>>(istream& is,  vector<T> &v){for (auto& i : v) is >> i;                       return is;}
-template<typename T>             ostream& operator<<(ostream& os,  vector<T>  v){for (auto& i : v) os << i << ' ';                return os;}
-template<typename T, typename U> istream& operator>>(istream& is, pair<T, U> &p){is >> p.first >> p.second;                       return is;}
-template<typename T, typename U> ostream& operator<<(ostream& os, pair<T, U>  p){os << '(' << p.first << "; " << p.second << ')'; return os;}
+template<typename T>             istream& operator>>(istream& is,  vector<T> &v){for (auto& i : v) is >> i;        return is;}
+template<typename T>             ostream& operator<<(ostream& os,  vector<T>  v){for (auto& i : v) os << i << ' '; return os;}
+template<typename T, typename U> istream& operator>>(istream& is, pair<T, U> &p){is >> p.first >> p.second;        return is;}
+template<typename T, typename U> ostream& operator<<(ostream& os, pair<T, U>  p){os << p.first << ' ' << p.second; return os;}
 
-/*const int MAX_MEM = 1e8; 
+const int MAX_MEM = 1e8; 
 int mpos = 0; 
 char mem[MAX_MEM]; 
 inline void * operator new ( size_t n ) { 
     assert((mpos += n) <= MAX_MEM); 
     return (void *)(mem + mpos - n); 
 } 
-inline void operator delete (void *) noexcept { } */
+inline void operator delete (void *) noexcept { } 
 
 #define fast(){ \
     ios_base::sync_with_stdio(0); \
@@ -81,29 +81,10 @@ inline void operator delete (void *) noexcept { } */
     Solutions starts here!!!
    -------------------------- */
 
-vector <int> parent, rang;
+ld a, b, c;
 
-void make_set (int v) {
-    parent[v] = v;
-    rang[v] = 0;
-}
-
-int find_set (int v) {
-    if (parent[v] == v)
-        return v;
-    return parent[v] = find_set(parent[v]);
-}
-
-void union_sets (int v, int u) {
-    v = find_set(v);
-    u = find_set(u);
-    if (v != u) {
-        if (rang[v] > rang[u])
-            swap(v, u);
-        parent[v] = u;
-        if (rang[v] == rang[u])
-            rang[u]++;
-    }
+ld check (ld a, ld b, ld c, ld x) {
+    return a * x * x + b * x + c;
 }
 
 signed main() {
@@ -114,32 +95,26 @@ signed main() {
     #endif
     fast();
 
-    int n, m;
-    cin >> n >> m;
-    parent.resize(n + 1, 0);
-    rang.resize(n + 1, -1);
-    while (m--) {
-        string s;
-        int a, b;
-        cin >> s;
-        cin >> a >> b;
-        if (s == "get") {
-            if (parent[a] == 0)
-                make_set(a);
-            if (parent[b] == 0)
-                make_set(b);
-            cout << (find_set(a) == find_set(b) ? "YES" : "NO") << '\n';
+    cin >> a >> b >> c;
+
+    ld l = -INF, r = INF;
+    ld q = (3 - sqrt(5)) / 2;
+    ld m1 = l + (r - l) * q;
+    ld m2 = r - (r - l) * q;
+
+    while (r - l > EPS) {
+        if (check(a, b, c, m1) > check(a, b, c, m2)) {
+            l = m1;
+            m1 = m2;
+            m2 = r - q * (r - l);
         }
         else {
-            if (parent[a] == 0)
-                make_set(a);
-            if (parent[b] == 0)
-                make_set(b);
-            union_sets(a, b);
+            r = m2;
+            m2 = m1;
+            m1 = l + q * (r - l);
         }
-
     }
-    
+    cout << (l + r) / 2 << '\n';
     #ifdef _LOCAL
         cerr << "Runtime: " << (ld)(clock() - Tsart) / CLOCKS_PER_SEC << '\n';
     #endif      

@@ -81,29 +81,21 @@ inline void operator delete (void *) noexcept { } */
     Solutions starts here!!!
    -------------------------- */
 
-vector <int> parent, rang;
+struct gcd_res {
+    int x;
+    int p;
+    int q;
 
-void make_set (int v) {
-    parent[v] = v;
-    rang[v] = 0;
-}
+    gcd_res (int x1 = 0, int p1 = 0, int q1 = 0) : x(x1), p(p1), q(q1) {};
 
-int find_set (int v) {
-    if (parent[v] == v)
-        return v;
-    return parent[v] = find_set(parent[v]);
-}
+};
 
-void union_sets (int v, int u) {
-    v = find_set(v);
-    u = find_set(u);
-    if (v != u) {
-        if (rang[v] > rang[u])
-            swap(v, u);
-        parent[v] = u;
-        if (rang[v] == rang[u])
-            rang[u]++;
-    }
+gcd_res extended_gcd (int a, int b) {
+    if (b == 0)
+        return gcd_res(a, 1, 0);
+    gcd_res res = extended_gcd(b, a % b);
+    gcd_res new_res (res.x, res.q, res.p - (a / b) * res.q);
+    return new_res;
 }
 
 signed main() {
@@ -114,31 +106,16 @@ signed main() {
     #endif
     fast();
 
-    int n, m;
-    cin >> n >> m;
-    parent.resize(n + 1, 0);
-    rang.resize(n + 1, -1);
-    while (m--) {
-        string s;
-        int a, b;
-        cin >> s;
-        cin >> a >> b;
-        if (s == "get") {
-            if (parent[a] == 0)
-                make_set(a);
-            if (parent[b] == 0)
-                make_set(b);
-            cout << (find_set(a) == find_set(b) ? "YES" : "NO") << '\n';
-        }
-        else {
-            if (parent[a] == 0)
-                make_set(a);
-            if (parent[b] == 0)
-                make_set(b);
-            union_sets(a, b);
-        }
+    int a, m;
+    cin >> a >> m;
 
+    gcd_res ans = extended_gcd(a, m);
+    if (ans.x != 1) {
+        cout << "No solution" << '\n';
+        return 0;
     }
+    
+    cout << (ans.p % m + m) % m << '\n';
     
     #ifdef _LOCAL
         cerr << "Runtime: " << (ld)(clock() - Tsart) / CLOCKS_PER_SEC << '\n';

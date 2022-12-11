@@ -44,7 +44,7 @@ typedef vector <vector <int> > graph;
 #define sqr(a) ((a) * (a))
 #define all(x) (x).begin(), (x).end()
  
-const int INF = 1e9;
+const int INF = 30000;
 const ld EPS = 1e-8;
 const ld PI = atan2(0.0, -1.0);
 const int M = 1e9;
@@ -81,30 +81,12 @@ inline void operator delete (void *) noexcept { } */
     Solutions starts here!!!
    -------------------------- */
 
-vector <int> parent, rang;
+struct edge {
+    int v, u, w;
+};
 
-void make_set (int v) {
-    parent[v] = v;
-    rang[v] = 0;
-}
-
-int find_set (int v) {
-    if (parent[v] == v)
-        return v;
-    return parent[v] = find_set(parent[v]);
-}
-
-void union_sets (int v, int u) {
-    v = find_set(v);
-    u = find_set(u);
-    if (v != u) {
-        if (rang[v] > rang[u])
-            swap(v, u);
-        parent[v] = u;
-        if (rang[v] == rang[u])
-            rang[u]++;
-    }
-}
+edge e[10005];
+vector <int> dist;
 
 signed main() {
     #ifdef _LOCAL
@@ -116,30 +98,23 @@ signed main() {
 
     int n, m;
     cin >> n >> m;
-    parent.resize(n + 1, 0);
-    rang.resize(n + 1, -1);
-    while (m--) {
-        string s;
-        int a, b;
-        cin >> s;
-        cin >> a >> b;
-        if (s == "get") {
-            if (parent[a] == 0)
-                make_set(a);
-            if (parent[b] == 0)
-                make_set(b);
-            cout << (find_set(a) == find_set(b) ? "YES" : "NO") << '\n';
-        }
-        else {
-            if (parent[a] == 0)
-                make_set(a);
-            if (parent[b] == 0)
-                make_set(b);
-            union_sets(a, b);
-        }
-
+    for (int i = 0; i < m; i++) {
+        cin >> e[i].v >> e[i].u >> e[i].w;
+        e[i].v--; e[i].u--;
     }
-    
+
+    dist.resize(n, INF);
+    dist[0] = 0;
+    for (int i = 0; i < n - 1; i++) {
+        for (auto j : e) {
+            if (dist[j.v] == INF)
+                continue;
+            if (dist[j.u] > dist[j.v] + j.w)
+                dist[j.u] = dist[j.v] + j.w;
+        }
+    }
+
+    cout << dist << '\n';
     #ifdef _LOCAL
         cerr << "Runtime: " << (ld)(clock() - Tsart) / CLOCKS_PER_SEC << '\n';
     #endif      

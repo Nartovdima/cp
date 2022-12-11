@@ -76,12 +76,12 @@ void dijkstra(int v){
 			if (d[to] > d[u] + dist){
 				q.erase({d[to], to});
 				d[to] = d[u] + dist;
-				p[to] = v;
+				p[to] = u;
 				q.insert({d[to], to});
 			}
 		}
 	}
-
+	
 }
 
 signed main()
@@ -105,7 +105,10 @@ signed main()
  	
  	dijkstra(0);
 
- 	cout << d[n - 1] << '\n';
+ 	if (d[n - 1] == INF)
+	    cout << -1 << '\n';
+	else
+	    cout << d[n - 1] << '\n';
  	
 	#ifdef _LOCAL
 		cerr << "Runtime: " << (ld)(clock() - Tsart) / CLOCKS_PER_SEC << '\n';

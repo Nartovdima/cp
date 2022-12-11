@@ -81,29 +81,29 @@ inline void operator delete (void *) noexcept { } */
     Solutions starts here!!!
    -------------------------- */
 
-vector <int> parent, rang;
+int a[100005];
+int b[100005];
 
-void make_set (int v) {
-    parent[v] = v;
-    rang[v] = 0;
-}
 
-int find_set (int v) {
-    if (parent[v] == v)
-        return v;
-    return parent[v] = find_set(parent[v]);
-}
 
-void union_sets (int v, int u) {
-    v = find_set(v);
-    u = find_set(u);
-    if (v != u) {
-        if (rang[v] > rang[u])
-            swap(v, u);
-        parent[v] = u;
-        if (rang[v] == rang[u])
-            rang[u]++;
+void merge_sort(int l, int r) {
+    if (r - l <= 1)
+        return;
+
+    int m = (l + r) / 2;
+    merge_sort(l, m);
+    merge_sort(m, r);
+
+    int i = l, j = m;
+    for (int q = l; q < r; q++) {
+        if (i >= m || j < r && a[i] > a[j])
+            b[q] = a[j++];
+        else
+            b[q] = a[i++];
     }
+
+    for (int i = l; i < r; i++)
+        a[i] = b[i];
 }
 
 signed main() {
@@ -114,32 +114,16 @@ signed main() {
     #endif
     fast();
 
-    int n, m;
-    cin >> n >> m;
-    parent.resize(n + 1, 0);
-    rang.resize(n + 1, -1);
-    while (m--) {
-        string s;
-        int a, b;
-        cin >> s;
-        cin >> a >> b;
-        if (s == "get") {
-            if (parent[a] == 0)
-                make_set(a);
-            if (parent[b] == 0)
-                make_set(b);
-            cout << (find_set(a) == find_set(b) ? "YES" : "NO") << '\n';
-        }
-        else {
-            if (parent[a] == 0)
-                make_set(a);
-            if (parent[b] == 0)
-                make_set(b);
-            union_sets(a, b);
-        }
+    int n;
+    cin >> n;
+    for (int i = 0; i < n; i++)
+        cin >> a[i];
 
-    }
-    
+    merge_sort(0, n);
+
+    for (int i = 0; i < n; i++)
+        cout << a[i] << ' ';
+
     #ifdef _LOCAL
         cerr << "Runtime: " << (ld)(clock() - Tsart) / CLOCKS_PER_SEC << '\n';
     #endif      

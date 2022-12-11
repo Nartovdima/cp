@@ -48,7 +48,7 @@ const int INF = 1e9;
 const ld EPS = 1e-8;
 const ld PI = atan2(0.0, -1.0);
 const int M = 1e9;
-const int MAXN = 2 * 1e5;
+const int MAXN = 1e5;
 
 #ifdef _LOCAL
     mt19937 rnd(223);
@@ -81,30 +81,9 @@ inline void operator delete (void *) noexcept { } */
     Solutions starts here!!!
    -------------------------- */
 
-vector <int> parent, rang;
 
-void make_set (int v) {
-    parent[v] = v;
-    rang[v] = 0;
-}
-
-int find_set (int v) {
-    if (parent[v] == v)
-        return v;
-    return parent[v] = find_set(parent[v]);
-}
-
-void union_sets (int v, int u) {
-    v = find_set(v);
-    u = find_set(u);
-    if (v != u) {
-        if (rang[v] > rang[u])
-            swap(v, u);
-        parent[v] = u;
-        if (rang[v] == rang[u])
-            rang[u]++;
-    }
-}
+int st[20][MAXN];
+vector <int> lg;
 
 signed main() {
     #ifdef _LOCAL
@@ -116,30 +95,38 @@ signed main() {
 
     int n, m;
     cin >> n >> m;
-    parent.resize(n + 1, 0);
-    rang.resize(n + 1, -1);
-    while (m--) {
-        string s;
-        int a, b;
-        cin >> s;
-        cin >> a >> b;
-        if (s == "get") {
-            if (parent[a] == 0)
-                make_set(a);
-            if (parent[b] == 0)
-                make_set(b);
-            cout << (find_set(a) == find_set(b) ? "YES" : "NO") << '\n';
-        }
-        else {
-            if (parent[a] == 0)
-                make_set(a);
-            if (parent[b] == 0)
-                make_set(b);
-            union_sets(a, b);
-        }
 
+    lg.resize(n + 1);
+    for (int i = 1, j = 0, g = 2; i <= n; i++) {
+        if (g == i) {
+            g <<= 1;
+            j++;
+        }
+        lg[i] = j;
     }
-    
+
+    cin >> st[0][0];
+    for (int i = 1; i < n; i++) 
+        st[0][i] = (23 * st[0][i - 1] + 21563) % 16714589;
+
+
+    for (int i = 1; i <= lg[n]; i++)
+        for (int j = 0; j + (1 << i) <= n; j++) 
+            st[i][j] = min(st[i - 1][j], st[i - 1][j + (1 << (i - 1))]);
+        
+
+    int u, v, ans, g;
+    cin >> u >> v;
+    g = lg[abs(v - u) + 1];
+    ans = min(st[g][min(v, u) - 1], st[g][max(v, u) - (1 << g)]);
+    for (int i = 1; i < m; i++) {
+        u = ((17 * u + 751 + ans + 2 * i) % n) + 1;
+        v = ((13 * v + 593 + ans + 5 * i) % n) + 1;
+        g = lg[abs(v - u) + 1];
+        ans = min(st[g][min(v, u) - 1], st[g][max(v, u) - (1 << g)]);
+    }
+    cout << u << ' ' << v << ' ' << ans << '\n';
+
     #ifdef _LOCAL
         cerr << "Runtime: " << (ld)(clock() - Tsart) / CLOCKS_PER_SEC << '\n';
     #endif      

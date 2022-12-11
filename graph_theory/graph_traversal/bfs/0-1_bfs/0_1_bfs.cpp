@@ -81,28 +81,27 @@ inline void operator delete (void *) noexcept { } */
     Solutions starts here!!!
    -------------------------- */
 
-vector <int> parent, rang;
+vector <vector <ii> > g;
+vector <int> dist;
+deque <int> q;
+int n, m;
 
-void make_set (int v) {
-    parent[v] = v;
-    rang[v] = 0;
-}
-
-int find_set (int v) {
-    if (parent[v] == v)
-        return v;
-    return parent[v] = find_set(parent[v]);
-}
-
-void union_sets (int v, int u) {
-    v = find_set(v);
-    u = find_set(u);
-    if (v != u) {
-        if (rang[v] > rang[u])
-            swap(v, u);
-        parent[v] = u;
-        if (rang[v] == rang[u])
-            rang[u]++;
+void bfs (int st) {
+    dist.resize(n, INF);
+    dist[st] = 0;
+    q.push_front(st);
+    while (!q.empty()) {
+        int v = q.front();
+        q.pop_front();
+        for (auto u : g[v]) {
+            if (dist[u.ff] > dist[v] + u.ss) {
+                dist[u.ff] = dist[v] + u.ss;
+                if (u.ss == 0)
+                    q.push_front(u.ff);
+                else
+                    q.push_back(u.ff);
+            }
+        }
     }
 }
 
@@ -114,32 +113,18 @@ signed main() {
     #endif
     fast();
 
-    int n, m;
     cin >> n >> m;
-    parent.resize(n + 1, 0);
-    rang.resize(n + 1, -1);
-    while (m--) {
-        string s;
-        int a, b;
-        cin >> s;
-        cin >> a >> b;
-        if (s == "get") {
-            if (parent[a] == 0)
-                make_set(a);
-            if (parent[b] == 0)
-                make_set(b);
-            cout << (find_set(a) == find_set(b) ? "YES" : "NO") << '\n';
-        }
-        else {
-            if (parent[a] == 0)
-                make_set(a);
-            if (parent[b] == 0)
-                make_set(b);
-            union_sets(a, b);
-        }
-
+    g.resize(n);
+    for (int i = 0; i < m; i++) {
+        int a, b, c;
+        cin >> a >> b >> c;
+        a--; b--;
+        g[a].pb({b, c});
+        g[b].pb({a, c});
     }
     
+    bfs(0);
+
     #ifdef _LOCAL
         cerr << "Runtime: " << (ld)(clock() - Tsart) / CLOCKS_PER_SEC << '\n';
     #endif      

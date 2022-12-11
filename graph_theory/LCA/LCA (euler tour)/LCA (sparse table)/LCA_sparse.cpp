@@ -45,10 +45,7 @@ typedef vector <vector <int> > graph;
 #define all(x) (x).begin(), (x).end()
  
 const int INF = 1e9;
-const ld EPS = 1e-8;
-const ld PI = atan2(0.0, -1.0);
-const int M = 1e9;
-const int MAXN = 2 * 1e5;
+
 
 #ifdef _LOCAL
     mt19937 rnd(223);
@@ -81,30 +78,22 @@ inline void operator delete (void *) noexcept { } */
     Solutions starts here!!!
    -------------------------- */
 
-vector <int> parent, rang;
+graph g;
+vector <int> h, f, et;
+int st[25][200005];
 
-void make_set (int v) {
-    parent[v] = v;
-    rang[v] = 0;
+void dfs (int v) {
+    f[v] = et.size();
+    et.pb(v);
+    for (auto &u : g[v]) 
+        if (h[u] == 0) {
+            h[u] = h[v] + 1;
+            dfs(u);
+            et.pb(v);
+        }
 }
 
-int find_set (int v) {
-    if (parent[v] == v)
-        return v;
-    return parent[v] = find_set(parent[v]);
-}
 
-void union_sets (int v, int u) {
-    v = find_set(v);
-    u = find_set(u);
-    if (v != u) {
-        if (rang[v] > rang[u])
-            swap(v, u);
-        parent[v] = u;
-        if (rang[v] == rang[u])
-            rang[u]++;
-    }
-}
 
 signed main() {
     #ifdef _LOCAL
@@ -116,30 +105,55 @@ signed main() {
 
     int n, m;
     cin >> n >> m;
-    parent.resize(n + 1, 0);
-    rang.resize(n + 1, -1);
-    while (m--) {
-        string s;
-        int a, b;
-        cin >> s;
-        cin >> a >> b;
-        if (s == "get") {
-            if (parent[a] == 0)
-                make_set(a);
-            if (parent[b] == 0)
-                make_set(b);
-            cout << (find_set(a) == find_set(b) ? "YES" : "NO") << '\n';
-        }
-        else {
-            if (parent[a] == 0)
-                make_set(a);
-            if (parent[b] == 0)
-                make_set(b);
-            union_sets(a, b);
-        }
-
+    g.resize(n);
+    for (int i = 1; i < n; i++) {
+        int x;
+        cin >> x;
+        g[x].pb(i);
     }
     
+    h.resize(n);
+    et.reserve(2 * n);
+    f.resize(n);
+    h[0] = 1;
+    
+    dfs(0);
+    et.shrink_to_fit();
+    int N = et.size();
+    
+    for (int i = 0; i < N; i++)
+        st[0][i] = et[i];
+
+    for (int i = 1; i <= __lg(N); i++)
+        for (int j = 0; j + (1 << i) <= N; j++)
+            if (h[st[i - 1][j]] < h[st[i - 1][j + (1 << (i - 1))]])
+                st[i][j] = st[i - 1][j];
+            else
+                st[i][j] = st[i - 1][j + (1 << (i - 1))];
+    
+    ll a1, a2;
+    cin >> a1 >> a2;
+    ll x, y, z;
+    cin >> x >> y >> z;
+
+    ll sum = 0, ans = 0;
+    while (m--) {
+        ll l = (a1 + ans) % n, r = a2;
+        l = f[l]; r = f[r];
+        if (l > r)
+            swap(l, r);
+        ll g = __lg(r - l + 1);
+        if (h[st[g][l]] < h[st[g][r - (1 << g) + 1]])
+            ans = st[g][l];
+        else
+            ans = st[g][r - (1 << g) + 1];
+        sum += ans;
+        a1 = (a1 * x + a2 * y + z) % n;
+        a2 = (a2 * x + a1 * y + z) % n;
+    }
+
+    cout << sum << '\n';
+
     #ifdef _LOCAL
         cerr << "Runtime: " << (ld)(clock() - Tsart) / CLOCKS_PER_SEC << '\n';
     #endif      

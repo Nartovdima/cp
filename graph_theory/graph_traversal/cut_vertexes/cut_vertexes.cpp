@@ -48,7 +48,7 @@ const int INF = 1e9;
 const ld EPS = 1e-8;
 const ld PI = atan2(0.0, -1.0);
 const int M = 1e9;
-const int MAXN = 2 * 1e5;
+const int MAXN = 2 * 1e3 + 10;
 
 #ifdef _LOCAL
     mt19937 rnd(223);
@@ -81,31 +81,29 @@ inline void operator delete (void *) noexcept { } */
     Solutions starts here!!!
    -------------------------- */
 
-vector <int> parent, rang;
+graph g;
+int timer = 0;
+vector <int> used, tin, up;
+set <int> st;
 
-void make_set (int v) {
-    parent[v] = v;
-    rang[v] = 0;
-}
-
-int find_set (int v) {
-    if (parent[v] == v)
-        return v;
-    return parent[v] = find_set(parent[v]);
-}
-
-void union_sets (int v, int u) {
-    v = find_set(v);
-    u = find_set(u);
-    if (v != u) {
-        if (rang[v] > rang[u])
-            swap(v, u);
-        parent[v] = u;
-        if (rang[v] == rang[u])
-            rang[u]++;
+void dfs (int v, int p = -1) {
+    used[v] = 1;
+    tin[v] = up[v] = timer++;
+    int child = 0;
+    for (auto u : g[v]) {
+        if (used[u])
+            up[v] = min(up[v], tin[u]);
+        else {
+            dfs(u, v);
+            up[v] = min(up[v], up[u]);
+            if (up[u] >= tin[v] && p != -1)
+                st.insert(v);
+            child++;
+        }
     }
+    if (p == -1 && child > 1)
+        st.insert(v);
 }
-
 signed main() {
     #ifdef _LOCAL
         clock_t Tsart = clock();
@@ -116,30 +114,22 @@ signed main() {
 
     int n, m;
     cin >> n >> m;
-    parent.resize(n + 1, 0);
-    rang.resize(n + 1, -1);
-    while (m--) {
-        string s;
+    g.resize(n);
+    for (int i = 0; i < m; i++) {
         int a, b;
-        cin >> s;
         cin >> a >> b;
-        if (s == "get") {
-            if (parent[a] == 0)
-                make_set(a);
-            if (parent[b] == 0)
-                make_set(b);
-            cout << (find_set(a) == find_set(b) ? "YES" : "NO") << '\n';
-        }
-        else {
-            if (parent[a] == 0)
-                make_set(a);
-            if (parent[b] == 0)
-                make_set(b);
-            union_sets(a, b);
-        }
-
+        a--; b--;
+        g[a].pb(b);
+        g[b].pb(a);
     }
-    
+    used.resize(n, 0); tin.resize(n, 0); up.resize(n, 0);
+    for (int i = 0; i < n; i++)
+        if (!used[i])
+            dfs(i);
+
+    cout << st.size() << '\n';
+    for (auto i : st)
+        cout << i + 1 << ' ';
     #ifdef _LOCAL
         cerr << "Runtime: " << (ld)(clock() - Tsart) / CLOCKS_PER_SEC << '\n';
     #endif      

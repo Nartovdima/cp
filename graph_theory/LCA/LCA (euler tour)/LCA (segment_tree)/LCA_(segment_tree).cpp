@@ -45,10 +45,7 @@ typedef vector <vector <int> > graph;
 #define all(x) (x).begin(), (x).end()
  
 const int INF = 1e9;
-const ld EPS = 1e-8;
-const ld PI = atan2(0.0, -1.0);
-const int M = 1e9;
-const int MAXN = 2 * 1e5;
+
 
 #ifdef _LOCAL
     mt19937 rnd(223);
@@ -81,30 +78,81 @@ inline void operator delete (void *) noexcept { } */
     Solutions starts here!!!
    -------------------------- */
 
-vector <int> parent, rang;
+graph g;
+vector <int> h, f, et;
 
-void make_set (int v) {
-    parent[v] = v;
-    rang[v] = 0;
+void dfs (int v) {
+    f[v] = et.size();
+    et.pb(v);
+    for (auto &u : g[v]) 
+        if (h[u] == 0) {
+            h[u] = h[v] + 1;
+            dfs(u);
+            et.pb(v);
+        }
 }
 
-int find_set (int v) {
-    if (parent[v] == v)
-        return v;
-    return parent[v] = find_set(parent[v]);
-}
+struct Node {
+    int mn = INF;
+};
 
-void union_sets (int v, int u) {
-    v = find_set(v);
-    u = find_set(u);
-    if (v != u) {
-        if (rang[v] > rang[u])
-            swap(v, u);
-        parent[v] = u;
-        if (rang[v] == rang[u])
-            rang[u]++;
+struct ST {
+    int sz = 2;
+    vector <Node> tree;
+
+    ST (int n) {
+        while (sz < n) sz <<= 1;
+        tree.resize(sz << 1, Node());
+        build(1, 0, n);
     }
-}
+
+    /*void print (int v, int l, int r) {
+        cout << v << ' ' << l << ' ' << r << ' ' << tree[v].mn << '\n';
+        if (r - l == 1)
+            return;
+        int m = (l + r) / 2;
+        print(v * 2, l, m);
+        print(v * 2 + 1, m, r);
+    }*/
+
+    inline void relax (int v) {
+        if (v < sz) {
+            if (tree[v * 2].mn == INF)
+                tree[v].mn = tree[v * 2 + 1].mn;
+            else if (tree[v * 2 + 1].mn == INF)
+                tree[v].mn = tree[v * 2].mn;
+            else
+                tree[v].mn = ((h[tree[v * 2].mn] < h[tree[v * 2 + 1].mn]) ? tree[v * 2].mn : tree[v * 2 + 1].mn);
+        }
+    }
+
+    void build (int v, int l, int r) {
+        if (r - l == 1) {
+            tree[v].mn = et[l];
+            return;
+        }
+        int m = (l + r) / 2;
+        build(v * 2, l, m);
+        build(v * 2 + 1, m, r);
+        relax(v);
+    }
+
+    int get_f (int v, int l, int r, int L, int R) {
+        if (R <= l || r <= L)
+            return INF;
+        if (L <= l && r <= R)
+            return tree[v].mn;
+        int m = (l + r) / 2;
+        int tmp1 = get_f(v * 2, l, m, L, R);
+        int tmp2 = get_f(v * 2 + 1, m, r, L, R);
+        if (tmp1 == INF)
+            return tmp2;
+        else if (tmp2 == INF)
+            return tmp1;
+        else
+            return ((h[tmp1] < h[tmp2]) ? tmp1 : tmp2);
+    }
+};
 
 signed main() {
     #ifdef _LOCAL
@@ -116,30 +164,36 @@ signed main() {
 
     int n, m;
     cin >> n >> m;
-    parent.resize(n + 1, 0);
-    rang.resize(n + 1, -1);
-    while (m--) {
-        string s;
-        int a, b;
-        cin >> s;
-        cin >> a >> b;
-        if (s == "get") {
-            if (parent[a] == 0)
-                make_set(a);
-            if (parent[b] == 0)
-                make_set(b);
-            cout << (find_set(a) == find_set(b) ? "YES" : "NO") << '\n';
-        }
-        else {
-            if (parent[a] == 0)
-                make_set(a);
-            if (parent[b] == 0)
-                make_set(b);
-            union_sets(a, b);
-        }
-
+    g.resize(n);
+    for (int i = 1; i < n; i++) {
+        int x;
+        cin >> x;
+        g[x].pb(i);
     }
     
+    h.resize(n);
+    et.reserve(2 * n);
+    f.resize(n);
+    h[0] = 1;
+    
+    dfs(0);
+    et.shrink_to_fit();
+    ST tmp(et.size());
+    
+    ll a1, a2;
+    cin >> a1 >> a2;
+    ll x, y, z;
+    cin >> x >> y >> z;
+
+    ll sum = 0;
+    while (m--) {
+        sum += tmp.get_f(1, 0, et.size(), min(f[a1], f[a2]), max(f[a1], f[a2]) + 1);;
+        a1 = (a1 * x + a2 * y + z) % n;
+        a2 = (a2 * x + a1 * y + z) % n;
+    }
+
+    cout << sum << '\n';
+
     #ifdef _LOCAL
         cerr << "Runtime: " << (ld)(clock() - Tsart) / CLOCKS_PER_SEC << '\n';
     #endif      
